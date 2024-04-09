@@ -3,7 +3,7 @@ from datetime import datetime
 import argparse
 
 
-def write_user_date(file_name: str):
+def write_user_date(file_name: str) -> None:
     try:
         create_time = f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} \n"
         user_input_data = [create_time]
@@ -15,13 +15,13 @@ def write_user_date(file_name: str):
             user_input_data.append(f"{line_counter} {user_input}\n")
             line_counter += 1
 
-        with open(file_name, 'a') as file:
+        with open(file_name, "a") as file:
             file.writelines(user_input_data)
     except IOError:
         print("We got an error while during writing process")
 
 
-def create_file(dir_path, file_path):
+def create_file(dir_path: str, file_path: str) -> None:
     try:
         if dir_path:
             path_to_dir = os.path.join(*dir_path)
