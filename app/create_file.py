@@ -4,7 +4,7 @@ import argparse
 
 
 def get_user_data() -> list[str]:
-    create_time = f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n"
+    create_time = f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} \n"
     user_input_data = [create_time]
     line_counter = 1
     while 1:
