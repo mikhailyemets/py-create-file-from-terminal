@@ -1,41 +1,49 @@
-import sys
 import os
 from datetime import datetime
+import argparse
 
 
-def input_data(file_path: str) -> None:
-    line_number = 0
-    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def write_user_date(file_name: str):
+    try:
+        create_time = f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} \n"
+        user_input_data = [create_time]
+        line_counter = 1
+        while 1:
+            user_input = input("Enter some message: ")
+            if user_input == "stop":
+                break
+            user_input_data.append(f"{line_counter} {user_input}\n")
+            line_counter += 1
 
-    with open(file_path, "a") as file:
-        file.write(f"{time} \n")
-    while 1:
-        line_number += 1
-        text_line = input("Enter content line: ")
-        if text_line.lower() == "stop":
-            break
-        with open(file_path, "a") as file:
-            file.write(f"{line_number} {text_line} \n")
+        with open(file_name, 'a') as file:
+            file.writelines(user_input_data)
+    except IOError:
+        print("We got an error while during writing process")
 
 
-def main() -> None:
-    if "-d" in sys.argv and "-f" not in sys.argv:
-        d_index = sys.argv.index("-d")
-        dir_path = os.path.join(*sys.argv[d_index + 1:])
-        os.makedirs(dir_path, exist_ok=True)
-        file_path = os.path.join(dir_path, "file.txt")
-        input_data(file_path)
-    elif "-f" in sys.argv and "-d" not in sys.argv:
-        f_index = sys.argv.index("-f")
-        file_path = sys.argv[f_index + 1]
-        utc_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open(file_path, "w") as file_time:
-            file_time.write(utc_time + "\n")
-        input_data(file_path)
-    elif "-d" in sys.argv and "-f" in sys.argv:
-        d_index = sys.argv.index("-d")
-        f_index = sys.argv.index("-f")
-        dir_path = os.path.join(*sys.argv[d_index + 1:f_index])
-        os.makedirs(dir_path, exist_ok=True)
-        file_path = os.path.join(dir_path, sys.argv[f_index + 1])
-        input_data(file_path)
+def create_file(dir_path, file_path):
+    try:
+        if dir_path:
+            path_to_dir = os.path.join(*dir_path)
+            print("file directory: ", path_to_dir)
+            os.makedirs(path_to_dir, exist_ok=True)
+        if file_path:
+            if dir_path:
+                path_to_file = os.path.join(*dir_path, file_path)
+                write_user_date(path_to_file)
+            else:
+                write_user_date(file_path)
+    except (IOError, argparse.ArgumentTypeError):
+        print("Oops, we got an error during the creating file process")
+
+
+parser = argparse.ArgumentParser(description="Parser for args")
+parser.add_argument("-f", dest="file_path")
+parser.add_argument("-d", nargs="+", dest="dir_path")
+
+try:
+    args = parser.parse_args()
+except (IOError, argparse.ArgumentTypeError):
+    print("Cant parse provided arguments")
+else:
+    create_file(args.dir_path, args.file_path)
