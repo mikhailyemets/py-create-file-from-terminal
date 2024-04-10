@@ -1,6 +1,6 @@
-import os
-from datetime import datetime
 import argparse
+from datetime import datetime
+import os
 
 
 def get_user_data() -> list[str]:
@@ -37,10 +37,24 @@ def create_file(dir_path: str, file_path: str) -> None:
             write_user_date(file_path)
 
 
-parser = argparse.ArgumentParser(description="Parser for args")
-parser.add_argument("-f", dest="file_path")
-parser.add_argument("-d", nargs="+", dest="dir_path")
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Parsed arguments including file path and directory path."
+    )
+    parser.add_argument(
+        "-f",
+        dest="file_path",
+        help="Path to the file where data will be written"
+    )
+    parser.add_argument(
+        "-d",
+        nargs="+",
+        dest="dir_path",
+        help="Directory path where the file will be created"
+    )
+    return parser.parse_args()
 
 
-args = parser.parse_args()
-create_file(args.dir_path, args.file_path)
+if "__name__" == "__main__":
+    args = parse_arguments()
+    create_file(args.dir_path, args.file_path)
