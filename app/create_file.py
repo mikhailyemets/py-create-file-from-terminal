@@ -16,7 +16,7 @@ def get_user_data() -> list[str]:
     return user_input_data
 
 
-def write_user_date(file_name: str) -> None:
+def write_user_data(file_name: str) -> None:
     try:
         with open(file_name, "a") as file:
             file.writelines(get_user_data())
@@ -32,9 +32,9 @@ def create_file(dir_path: str, file_path: str) -> None:
     if file_path:
         if dir_path:
             path_to_file = os.path.join(*dir_path, file_path)
-            write_user_date(path_to_file)
+            write_user_data(path_to_file)
         else:
-            write_user_date(file_path)
+            write_user_data(file_path)
 
 
 def parse_arguments() -> argparse.Namespace:
